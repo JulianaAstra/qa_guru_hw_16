@@ -7,13 +7,12 @@ import io.restassured.specification.ResponseSpecification;
 import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.restassured.RestAssured.with;
 import static io.restassured.filter.log.LogDetail.ALL;
+import static io.restassured.http.ContentType.JSON;
 
-public class ReqresSpec {
-    public static final String API_KEY = "reqres-free-v1";
-
+public class Spec {
     public static RequestSpecification requestSpec = with()
             .filter(withCustomTemplates())
-            .header("x-api-key", API_KEY)
+            .contentType(JSON)
             .log()
             .all();
 
