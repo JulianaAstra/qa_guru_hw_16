@@ -1,22 +1,14 @@
 package tests;
 
-import io.restassured.response.Response;
-import models.AuthResponseModel;
-import models.BookModel;
-import models.BooksListResponseModel;
-import models.UserResponseModel;
+import models.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Cookie;
+import pages.ProfilePage;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,6 +19,7 @@ public class BookStoreTests extends TestBase {
     @Test
     @DisplayName("Удалить книгу")
     void deleteBookTest() {
+        ProfilePage profilePage = new ProfilePage();
         TestData testData = new TestData();
         Random random = new Random();
 
@@ -57,6 +50,7 @@ public class BookStoreTests extends TestBase {
                         },
                 Objects::nonNull));
 
+        String userID = registerResponse.userID();
         String token = authResponse.token();
         String expires = authResponse.expires();
 
@@ -76,26 +70,22 @@ public class BookStoreTests extends TestBase {
         BookModel randomBook = books.get(randomIndex);
         String bookName = randomBook.title();
         String bookIsbn = randomBook.isbn();
-        String bookData = format("{\"userId\":\"%s\",\"collectionOfIsbns\":[{\"isbn\":\"%s\"}]}",
-                registerResponse.userID() , bookIsbn);
+        AddBookBodyModel addBookData = new AddBookBodyModel(userID, List.of(new IsbnModel(bookIsbn)));
 
         step("Make add book to user cart request", () ->
             given()
                     .spec(requestSpec)
                     .header("Authorization", "Bearer " + token)
-                    .body(bookData)
+                    .body(addBookData)
                     .when()
                     .post("/BookStore/v1/Books")
                     .then()
                     .spec(responseSpec(201))
         );
 
-        open("favicon.ico");
-        getWebDriver().manage().addCookie(new Cookie("userID", registerResponse.userID()));
-        getWebDriver().manage().addCookie(new Cookie("expires", expires));
-        getWebDriver().manage().addCookie(new Cookie("token", token));
-
-        open("profile");
-        $(".ReactTable").shouldHave(text(bookName));
+        profilePage
+                .openProfilePageWithCookies(userID, expires, token)
+                .checkBookIsInList(bookName)
+                .deleteFirstBookInList(bookName);
     }
 }
