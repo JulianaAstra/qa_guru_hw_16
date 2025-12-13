@@ -16,13 +16,13 @@ import static specs.Spec.requestSpec;
 import static specs.Spec.responseSpec;
 
 public class BookStoreTests extends TestBase {
+    ProfilePage profilePage = new ProfilePage();
+    TestData testData = new TestData();
+    Random random = new Random();
+
     @Test
     @DisplayName("Удалить книгу")
     void deleteBookTest() {
-        ProfilePage profilePage = new ProfilePage();
-        TestData testData = new TestData();
-        Random random = new Random();
-
         UserResponseModel registerResponse = step("Make register new user request", () ->
                 given()
                 .spec(requestSpec)
