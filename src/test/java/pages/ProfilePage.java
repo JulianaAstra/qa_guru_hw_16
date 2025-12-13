@@ -44,6 +44,19 @@ public class ProfilePage {
         deleteFirstBookInListBtn
                 .shouldBe(visible)
                 .click();
+
+        confirmActionInModalWindow();
+        confirmActionInBrowser();
+
+        usersBooksList
+                .shouldNotHave(text(bookName));
+
+        return this;
+    }
+
+    @Step
+    @DisplayName("Подвердить действие в модальном окне")
+    public void confirmActionInModalWindow() {
         modalWindow
                 .shouldBe(visible);
         okBtnInModal
@@ -51,11 +64,12 @@ public class ProfilePage {
                 .click();
         modalWindow
                 .shouldNotBe(visible);
+    }
+
+    @Step
+    @DisplayName("Подвердить действие в браузере")
+    public void confirmActionInBrowser() {
         Selenide
                 .confirm();
-        usersBooksList
-                .shouldNotHave(text(bookName));
-
-        return this;
     }
 }
