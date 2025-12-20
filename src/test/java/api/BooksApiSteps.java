@@ -2,7 +2,6 @@ package api;
 
 import models.AddBookBodyModel;
 import models.BooksListResponseModel;
-
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static specs.Spec.requestSpec;

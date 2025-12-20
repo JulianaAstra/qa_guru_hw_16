@@ -33,23 +33,18 @@ public class ProfilePage {
     @Step
     @DisplayName("Книга {bookName} присутствует в списке книг пользователя")
     public ProfilePage checkBookIsInList(String bookName) {
-        usersBooksList
-                .shouldHave(text(bookName));
+        usersBooksList.shouldHave(text(bookName));
         return this;
     }
 
     @Step
     @DisplayName("Удалить книгу {bookName} из списка")
     public ProfilePage deleteFirstBookInList(String bookName) {
-        deleteFirstBookInListBtn
-                .shouldBe(visible)
+        deleteFirstBookInListBtn.shouldBe(visible)
                 .click();
-
         confirmActionInModalWindow();
         confirmActionInBrowser();
-
-        usersBooksList
-                .shouldNotHave(text(bookName));
+        usersBooksList.shouldNotHave(text(bookName));
 
         return this;
     }
@@ -57,19 +52,15 @@ public class ProfilePage {
     @Step
     @DisplayName("Подвердить действие в модальном окне")
     public void confirmActionInModalWindow() {
-        modalWindow
-                .shouldBe(visible);
-        okBtnInModal
-                .shouldBe(visible)
+        modalWindow.shouldBe(visible);
+        okBtnInModal.shouldBe(visible)
                 .click();
-        modalWindow
-                .shouldNotBe(visible);
+        modalWindow.shouldNotBe(visible);
     }
 
     @Step
     @DisplayName("Подвердить действие в браузере")
     public void confirmActionInBrowser() {
-        Selenide
-                .confirm();
+        Selenide.confirm();
     }
 }

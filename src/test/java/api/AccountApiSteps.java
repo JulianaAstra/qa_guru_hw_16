@@ -3,9 +3,7 @@ package api;
 import models.AuthResponseModel;
 import models.UserResponseModel;
 import tests.TestData;
-
 import java.util.Objects;
-
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
